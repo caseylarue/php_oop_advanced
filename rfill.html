@@ -1,0 +1,204 @@
+<html>
+<head>
+	<title>Recursive Fill Demo</title>
+	<style type="text/css">
+	div.row div{
+		border:1px solid silver;
+		width:20px;
+		height:20px;
+		display: inline-block;
+	}
+	div.row div.yellow{
+		background-color: yellow;
+	}
+	div.row div.red{
+		background-color: red;
+	}
+	div.row div.blue{
+		background-color: blue;
+	}
+	div.row div.yellow{
+		background-color: yellow;
+	}
+	div.row div.black{
+		background-color: black;
+	}
+	body{
+		padding:0px;
+		margin:0px;
+	}
+	</style>
+</head>
+<body>
+
+	<div id='background'></div>
+	
+
+	<script type="text/javascript">
+	var blocks = [
+		0,0,0,1,0,1,2,2,2,0,0,0,
+		0,1,0,1,2,2,2,3,2,3,3,3,
+		0,1,0,1,2,1,2,3,2,3,1,3,
+		0,0,0,1,1,1,2,2,2,1,1,1,
+	];
+
+	var mapping = {
+		0: 'yellow',
+		1: 'red',
+		2: 'blue',
+		3: 'white',
+		4: 'black'
+	}
+
+	function displayBlocks(){
+		var content = '';
+		for(var i=0; i<blocks.length; i++)
+		{
+			if(i%12==0)
+				content += "<div class='row'>";
+
+			content = content + "<div class='"+mapping[blocks[i]]+"'></div>";
+		
+			if(i%12==11)
+				content += "</div>";
+			
+		}
+		document.getElementById('background').innerHTML = content;
+	}
+
+	// document.onclick = function(e){
+	// 	var x = Math.floor(e.x/22);
+	// 	var y = Math.floor(e.y/22);
+
+	// 	console.log('(x,y) coord is', x,y);
+	// 	console.log('the value in the block is ', blocks[y*12+x]);
+	// 	console.log('the color is ', mapping[blocks[y*12+x]]);
+	// }
+
+	function fill(x,y) {
+
+		var current_i = y*12+x;
+		var current_color_n = blocks[current_i];
+
+		if (current_color_n == 4) {
+				return;
+			}
+		blocks[current_i]=4;
+
+//checking top square
+		if (y !=0) {
+			var top_i= (y-1)*12+x;
+			var top_color_n =blocks[top_i];
+
+			if (current_color_n == top_color_n) {
+
+				fill(x, y-1) // turn the one above black
+			}
+		}
+//checking left square
+		if (x !=0) {
+
+			var left_i = y*12+x-1;
+			var left_color_n = blocks[left_i];
+
+			if (current_color_n == left_color_n) {
+				fill(y,x-1);
+			}
+		}
+
+//checking right square
+		if (x <12) {
+
+			var right_i = [y*12+x+1];
+			var right_color_n = blocks[right_i];
+
+			if (current_color_n == right_color_n) {
+				fill(y,x+1);
+			}
+		}
+
+
+//checking bottom square
+		if (y <4) {
+			var bottom_i= (y+1)*12+x;
+			var bottom_color_n =blocks[bottom_i];
+
+			if (current_color_n == bottom_color_n) {
+
+				fill(x, y+1) // turn the one above black
+			}
+
+
+		}
+			displayBlocks();
+	}
+
+
+	document.onclick = function(c){
+		var x = Math.floor(c.x/22);
+		var y = Math.floor(c.y/22);
+		fill(x,y);
+		
+
+		// console.log('(x,y) coord is', x,y);
+		// console.log('the value in the block is ', blocks[y*12+x]);
+		// console.log('the color is ', mapping[blocks[y*12+x]]);
+
+		
+		// value above click
+		// console.log(blocks[y*12+x-1]);
+		// console.log(blocks[y*12+x-2]);
+		// console.log(blocks[y*12+x-y-2])
+		// console.log(y);
+
+
+		// if y=0 or y=3
+		// console.log ('above', blocks[y*12+x-12]);
+
+		// console.log ('below', blocks[y*12+x+12]);
+	
+
+	
+		// if(x >= 0)
+		// {
+		// 	//check right
+		// }	
+
+		// if(x = 11)
+		// {
+		// 	//check left
+		// }
+
+		// if(y >=0 )
+		// {
+		// 	// check below
+		// }
+
+		// if(y = 3)
+		// {
+		// 	// check above
+		// }
+
+		// else check all
+
+
+
+
+		// console.log('left', blocks[y*12+x-1]);
+
+		// console.log('right', blocks[y*12+x+1]);
+
+
+
+
+		// if (blocks[y*12+x] = blocks[y*12-x]) {
+		// 	console.log("left");
+		// }
+	}
+
+
+
+	displayBlocks();
+	</script>
+</body>
+</html>
